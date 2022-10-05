@@ -1,0 +1,31 @@
+#When running on Jupyter Lab 
+import sys 
+!{sys.executable} -m pip install biopython 
+import random 
+import pandas as pd 
+from Bio.Seq import Seq 
+from nupack import *
+
+def gibbs(H,C,Z):
+    H=Strand(str(H), name='H')
+    C=Strand(str(C), name='C')
+    Z=Strand(str(C), name='C')
+    set1 = ComplexSet(strands=[H,C,Z], complexes=SetSpec(max_size=3))
+    
+    my_model= Model(material='dna', ensemble='stacking', celsius=37)
+    complex_results = complex_analysis(complexes=set1, model=my_model, compute=['pfunc'])
+    
+    rstr=str(complex_results)
+    gibbs=[]
+    gibbs.append(rstr.split('-')[-1])
+    final=str(gibbs)
+    
+    return final
+
+#Y-structure free energy Gibbs
+Y1=Seq(input('Give Y1 sequence: \n'))
+Y2=Seq(input('Give Y2 sequence: \n'))
+Y3=Seq(input('Give Y3 sequence: \n'))
+
+g1=gibbs(Y1,Y2,Y3)
+print('Fre energy Gibbs of Y-structure is:-',g1[2:7])
